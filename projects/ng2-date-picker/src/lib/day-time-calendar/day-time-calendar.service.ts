@@ -35,8 +35,13 @@ export class DayTimeCalendarService {
     return _config as IDayTimeCalendarConfigInternal;
   }
 
-  updateDay(current: Dayjs, day: Dayjs, config: IDayCalendarConfigInternal): Dayjs {
-    const time = current ? current : dayjsRef();
+  updateDay(current: Dayjs, day: Dayjs, config: IDayTimeCalendarConfigInternal): Dayjs {
+    let time = current ? current : dayjsRef();
+
+    if (!current && config.defaultTime) {
+      time = time.set('hour', config.defaultTime.hour()).set('minute', config.defaultTime.minute()).set('second', config.defaultTime.second());
+    }
+
     let updated = dayjsRef(day.format(DAY_FORMAT) + time.format(TIME_FORMAT), COMBINED_FORMAT);
 
     if (config.min) {
